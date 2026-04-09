@@ -8,7 +8,7 @@ export const matchaPosts = [
         aroma: "Fresh and grassy",
         texture: "Smooth",
         description: "Balanced, creamy, and easy to enjoy even for newer matcha drinkers.",
-        image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/shoumei.JPG"
     },
     {
         id: 2,
@@ -19,7 +19,7 @@ export const matchaPosts = [
         aroma: "Milky and soft",
         texture: "Creamy",
         description: "A sweet and approachable cafe-style matcha latte with low bitterness.",
-        image: "https://images.unsplash.com/photo-1515823662972-da6a2e4d3002?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/choji.JPG"
     },
     {
         id: 3,
@@ -30,7 +30,7 @@ export const matchaPosts = [
         aroma: "Earthy",
         texture: "Light",
         description: "Refreshing and slightly bolder, especially nice on warmer days.",
-        image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/cho.JPG"
     },
     {
         id: 4,
@@ -41,7 +41,7 @@ export const matchaPosts = [
         aroma: "Elegant and sweet",
         texture: "Velvety",
         description: "Very smooth with a refined finish and beautiful green color.",
-        image: "https://images.unsplash.com/photo-1464306076886-da185f6a9d05?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/IMG_2004.JPG"
     },
     {
         id: 5,
@@ -52,7 +52,7 @@ export const matchaPosts = [
         aroma: "Toasty and mellow",
         texture: "Rich",
         description: "A comforting cafe experience with good balance between milk and matcha.",
-        image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/IMG_2919.JPG"
     },
     {
         id: 6,
@@ -63,7 +63,7 @@ export const matchaPosts = [
         aroma: "Bright and grassy",
         texture: "Foamy",
         description: "Traditional whisking method that gives a fresh aroma and airy texture.",
-        image: "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80"
+        image: "../assets/IMG_8709.JPG"
     }
 ];
 
