@@ -66,3 +66,21 @@ export const matchaPosts = [
         image: "images/IMG_8709.JPG"
     }
 ];
+
+export const starterWishlist = [
+    {
+        id: 101,
+        name: "Yame Matcha Powder",
+        type: "Powder"
+    },
+    {
+        id: 102,
+        name: "Matcha latte at Kettl",
+        type: "Cafe"
+    },
+    {
+        id: 103,
+        name: "Koicha preparation",
+        type: "Method"
+    }
+];
