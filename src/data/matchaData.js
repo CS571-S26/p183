@@ -8,7 +8,7 @@ export const matchaPosts = [
         aroma: "Fresh and grassy",
         texture: "Smooth",
         description: "Balanced, creamy, and easy to enjoy even for newer matcha drinkers.",
-        image: "../assets/shoumei.JPG"
+        image: "/images/shoumei.JPG"
     },
     {
         id: 2,
@@ -19,7 +19,7 @@ export const matchaPosts = [
         aroma: "Milky and soft",
         texture: "Creamy",
         description: "A sweet and approachable cafe-style matcha latte with low bitterness.",
-        image: "../assets/choji.JPG"
+        image: "/images/choji.JPG"
     },
     {
         id: 3,
@@ -30,7 +30,7 @@ export const matchaPosts = [
         aroma: "Earthy",
         texture: "Light",
         description: "Refreshing and slightly bolder, especially nice on warmer days.",
-        image: "../assets/cho.JPG"
+        image: "/images/cho.JPG"
     },
     {
         id: 4,
@@ -41,7 +41,7 @@ export const matchaPosts = [
         aroma: "Elegant and sweet",
         texture: "Velvety",
         description: "Very smooth with a refined finish and beautiful green color.",
-        image: "../assets/IMG_2004.JPG"
+        image: "/images/IMG_2004.JPG"
     },
     {
         id: 5,
@@ -52,7 +52,7 @@ export const matchaPosts = [
         aroma: "Toasty and mellow",
         texture: "Rich",
         description: "A comforting cafe experience with good balance between milk and matcha.",
-        image: "../assets/IMG_2919.JPG"
+        image: "/images/IMG_2919.JPG"
     },
     {
         id: 6,
@@ -63,7 +63,7 @@ export const matchaPosts = [
         aroma: "Bright and grassy",
         texture: "Foamy",
         description: "Traditional whisking method that gives a fresh aroma and airy texture.",
-        image: "../assets/IMG_8709.JPG"
+        image: "/images/IMG_8709.JPG"
     }
 ];
 
