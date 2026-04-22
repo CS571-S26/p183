@@ -1,11 +1,26 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { matchaPosts as initialPosts, starterWishlist } from "../../data/matchaData";
 
 const MatchaBookContext = createContext();
 
 export function MatchaBookProvider({ children }) {
-    const [posts, setPosts] = useState(initialPosts);
-    const [wishlist, setWishlist] = useState(starterWishlist);
+    const [posts, setPosts] = useState(() => {
+        const savedPosts = localStorage.getItem("matcha-posts");
+        return savedPosts ? JSON.parse(savedPosts) : initialPosts;
+    });
+
+    const [wishlist, setWishlist] = useState(() => {
+        const savedWishlist = localStorage.getItem("matcha-wishlist");
+        return savedWishlist ? JSON.parse(savedWishlist) : starterWishlist;
+    });
+
+    useEffect(() => {
+        localStorage.setItem("matcha-posts", JSON.stringify(posts));
+    }, [posts]);
+
+    useEffect(() => {
+        localStorage.setItem("matcha-wishlist", JSON.stringify(wishlist));
+    }, [wishlist]);
 
     function addToWishlist(post) {
         const wishlistItem = {

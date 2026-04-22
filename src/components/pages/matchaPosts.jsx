@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Alert, Col, Container, Form, Row } from "react-bootstrap";
 import { useMatchaBook } from "../context/matchaBookContext.jsx";
-import MatchaPostCard from "../content/matchaPostCard";
+import MatchaPostCard from "../content/matchaPostCard.jsx";
 
 export default function MatchaPosts() {
     const { posts, addToWishlist } = useMatchaBook();
@@ -63,7 +63,7 @@ export default function MatchaPosts() {
             <Row>
                 {filteredPosts.map(post => (
                     <Col key={post.id} xs={12} md={6} lg={4} className="mb-4">
-                        <matchaPostCard post={post} onAddToWishlist={handleAdd} />
+                        <MatchaPostCard post={post} onAddToWishlist={handleAdd} />
                     </Col>
                 ))}
             </Row>
