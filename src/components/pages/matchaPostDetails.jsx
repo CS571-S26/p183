@@ -36,7 +36,7 @@ export default function MatchaPostDetails() {
                         <Button variant="success" onClick={() => addToWishlist(post)}>
                             Add to Wishlist
                         </Button>
-                        <Button as={NavLink} to="/posts" variant="outline-success">
+                        <Button as={NavLink} to="/posts" variant="secondary">
                             Back to Posts
                         </Button>
                     </div>
