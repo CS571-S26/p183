@@ -47,9 +47,8 @@ body {
 
 .post-image {
   width: 100%;
-  height: 260px;
-  object-fit: contain;
-  background-color: #f6fbf4;
+  height: auto;
+  display: block;
 }
 
 .details-image {
