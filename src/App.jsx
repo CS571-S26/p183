@@ -7,6 +7,8 @@ import MatchaAbout from "./components/pages/matchaAbout.jsx";
 import MatchaNoMatch from "./components/pages/matchaNoMatch.jsx";
 import MatchaPostDetails from "./components/pages/matchaPostDetails.jsx";
 import MatchaCreatePost from "./components/pages/matchaCreatePost.jsx";
+import MatchaLogin from "./components/auth/matchaLogin.jsx";
+import MatchaRegister from "./components/auth/matchaRegister.jsx";
 
 const router = createHashRouter([
   {
@@ -19,6 +21,8 @@ const router = createHashRouter([
       { path: "wishlist", element: <MatchaWishlist /> },
       { path: "create", element: <MatchaCreatePost /> },
       { path: "about", element: <MatchaAbout /> },
+      { path: "login", element: <MatchaLogin /> },
+      { path: "register", element: <MatchaRegister /> },
       { path: "*", element: <MatchaNoMatch /> }
     ]
   }

@@ -1,81 +1,99 @@
-import React, { useState } from 'react';
-import { Form, Button } from "react-bootstrap";
-import { useContext } from "react";
-import { useNavigate } from "react-router";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
+import { useState } from "react";
+import { Alert, Button, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useMatchaAuth } from "../context/matchaAuthContext.jsx";
 
-export default function BadgerRegister() {
-    const [username, setUsername] = useState("");
-    const [pin, setPin] = useState("");
-    const [confirmPin, setConfirmPin] = useState("");
-    const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+export default function MatchaRegister() {
+    const { register } = useMatchaAuth();
     const navigate = useNavigate();
-    function handleRegister(e) {
-        e.preventDefault();
-        if (!username || !pin) {
-            alert("You must provide both a username and pin!");
-            return;
-        }
-        if (!/^\d{7}$/.test(pin) || !/^\d{7}$/.test(confirmPin)) {
-            alert("Your pin must be a 7-digit number!");
-            return;
-        }
-        if (pin !== confirmPin) {
-            alert("Your pins do not match!");
-            return;
-        }
-        fetch("https://cs571api.cs.wisc.edu/rest/s26/hw6/register", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "X-CS571-ID": CS571.getBadgerId(),
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                pin: pin
-            })
-        })
-            .then(res => {
-                if (res.status === 409) {
-                    alert("That username has already been taken!");
-                } else if (res.status === 200) {
-                    alert("You have successfully registered!");
-                    setLoginStatus(username);
-                    sessionStorage.setItem("loginStatus", JSON.stringify(username));
-                    navigate("/");
-                }
-            });
+
+    const [formData, setFormData] = useState({
+        username: "",
+        password: "",
+        confirmPassword: ""
+    });
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setFormData((current) => ({
+            ...current,
+            [name]: value
+        }));
     }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        if (formData.password !== formData.confirmPassword) {
+            setErrorMessage("Passwords do not match.");
+            return;
+        }
+
+        const result = register(formData.username, formData.password);
+
+        if (!result.success) {
+            setErrorMessage(result.message);
+            return;
+        }
+
+        setErrorMessage("");
+        navigate("/");
+    }
+
     return (
-        <>
-            <h1>Register</h1>
-            <Form onSubmit={handleRegister}>
-                <Form.Group className="mb-3" controlId="username">
-                    <Form.Label>Username</Form.Label>
+        <Container className="py-5" style={{ maxWidth: "600px" }}>
+            <h1 className="mb-3">Register</h1>
+            <p className="text-muted">
+                Create an account to join the MatchaBook community.
+            </p>
+
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="register-username">Username</Form.Label>
                     <Form.Control
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        id="register-username"
+                        name="username"
+                        autoComplete="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
                     />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="pin">
-                    <Form.Label>PIN</Form.Label>
+
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="register-password">Password</Form.Label>
                     <Form.Control
+                        id="register-password"
                         type="password"
-                        value={pin}
-                        onChange={(e) => setPin(e.target.value)}
+                        name="password"
+                        autoComplete="new-password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
                     />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="confirmPin">
-                    <Form.Label>Confirm PIN</Form.Label>
+
+                <Form.Group className="mb-4">
+                    <Form.Label htmlFor="register-confirm-password">Confirm Password</Form.Label>
                     <Form.Control
+                        id="register-confirm-password"
                         type="password"
-                        value={confirmPin}
-                        onChange={(e) => setConfirmPin(e.target.value)}
+                        name="confirmPassword"
+                        autoComplete="new-password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        required
                     />
                 </Form.Group>
-                <Button type="submit">Register</Button>
+
+                <Button type="submit" variant="success">
+                    Register
+                </Button>
             </Form>
-        </>
+        </Container>
     );
 }

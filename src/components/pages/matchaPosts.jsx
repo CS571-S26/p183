@@ -1,33 +1,52 @@
-import { useMemo, useState } from "react";
-import { Alert, Col, Container, Form, Row } from "react-bootstrap";
+import { useState } from "react";
+import { Alert, Col, Container, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useMatchaBook } from "../context/matchaBookContext.jsx";
+import { useMatchaAuth } from "../context/matchaAuthContext.jsx";
 import MatchaPostCard from "../content/matchaPostCard.jsx";
+import MatchaFilterBar from "../content/matchaFilterBar.jsx";
 
 export default function MatchaPosts() {
-    const { posts, addToWishlist } = useMatchaBook();
+    const { posts, toggleWishlist } = useMatchaBook();
+    const { isLoggedIn } = useMatchaAuth();
+    const navigate = useNavigate();
+
     const [category, setCategory] = useState("All");
     const [search, setSearch] = useState("");
     const [message, setMessage] = useState("");
 
-    function handleAdd(post) {
-        addToWishlist(post);
-        setMessage(`Added "${post.title}" to wishlist!`);
+    function handleToggle(post) {
+        if (!isLoggedIn) {
+            setMessage("Please log in to use the wishlist.");
+            setTimeout(() => {
+                setMessage("");
+                navigate("/login");
+            }, 1200);
+            return;
+        }
+
+        const added = toggleWishlist(post);
+
+        if (added) {
+            setMessage(`Added "${post.title}" to wishlist.`);
+        } else {
+            setMessage(`Removed "${post.title}" from wishlist.`);
+        }
+
         setTimeout(() => setMessage(""), 2000);
     }
 
-    const filteredPosts = useMemo(() => {
-        return posts.filter(post => {
-            const matchesCategory = category === "All" || post.category === category;
-            const searchLower = search.toLowerCase();
+    const filteredPosts = posts.filter(post => {
+        const matchesCategory = category === "All" || post.category === category;
+        const searchLower = search.toLowerCase();
 
-            const matchesSearch =
-                post.title.toLowerCase().includes(searchLower) ||
-                post.description.toLowerCase().includes(searchLower) ||
-                post.aroma.toLowerCase().includes(searchLower);
+        const matchesSearch =
+            post.title.toLowerCase().includes(searchLower) ||
+            post.description.toLowerCase().includes(searchLower) ||
+            post.aroma.toLowerCase().includes(searchLower);
 
-            return matchesCategory && matchesSearch;
-        });
-    }, [posts, category, search]);
+        return matchesCategory && matchesSearch;
+    });
 
     return (
         <Container className="py-5">
@@ -38,32 +57,17 @@ export default function MatchaPosts() {
 
             {message && <Alert variant="success">{message}</Alert>}
 
-            <Row className="mb-4">
-                <Col md={6} className="mb-3">
-                    <Form.Label>Search</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Search by title, aroma, or description..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </Col>
-
-                <Col md={6} className="mb-3">
-                    <Form.Label>Category</Form.Label>
-                    <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
-                        <option value="All">All</option>
-                        <option value="Powder">Powder</option>
-                        <option value="Cafe">Cafe</option>
-                        <option value="Method">Method</option>
-                    </Form.Select>
-                </Col>
-            </Row>
+            <MatchaFilterBar
+                search={search}
+                setSearch={setSearch}
+                category={category}
+                setCategory={setCategory}
+            />
 
             <Row>
                 {filteredPosts.map(post => (
                     <Col key={post.id} xs={12} md={6} lg={4} className="mb-4">
-                        <MatchaPostCard post={post} onAddToWishlist={handleAdd} />
+                        <MatchaPostCard post={post} onToggleWishlist={handleToggle} />
                     </Col>
                 ))}
             </Row>

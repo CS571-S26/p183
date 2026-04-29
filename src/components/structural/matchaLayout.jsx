@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import MatchaNavbar from "./matchaNavbar";
+import MatchaNavbar from "./matchaNavbar.jsx";
 
 export default function MatchaLayout() {
     return (

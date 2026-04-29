@@ -1,5 +1,6 @@
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import MatchaHero from "../content/matchaHero.jsx";
 import { useMatchaBook } from "../context/matchaBookContext.jsx";
 
 export default function MatchaChathome() {
@@ -8,16 +9,7 @@ export default function MatchaChathome() {
 
     return (
         <Container className="py-5">
-            <div className="hero-section text-center mb-5">
-                <h1 className="display-4 fw-bold">Welcome to MatchaBook</h1>
-                <p className="lead">
-                    A social space for matcha lovers to share reviews, discover cafes and powders,
-                    and keep track of what to try next.
-                </p>
-                <Button as={NavLink} to="/posts" variant="success">
-                    Explore Posts
-                </Button>
-            </div>
+            <MatchaHero />
 
             <h2 className="mb-4">Featured Matcha Posts</h2>
             <Row>
@@ -27,7 +19,7 @@ export default function MatchaChathome() {
                             <Card.Img
                                 variant="top"
                                 src={post.image}
-                                alt={post.title}
+                                alt={`Matcha post for ${post.title}`}
                                 className="post-image"
                             />
                             <Card.Body>
@@ -41,6 +33,11 @@ export default function MatchaChathome() {
                     </Col>
                 ))}
             </Row>
+            <div className="mt-5 text-center">
+                <h2 className="h4">Contact MatchaBook</h2>
+                <p>Email: rain@matchabook.demo</p>
+                <p>Phone: (608) 555-0147</p>
+            </div>
         </Container>
     );
 }

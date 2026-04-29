@@ -1,62 +1,79 @@
-import React, { useRef } from 'react';
-import { Button, Form } from "react-bootstrap";
-import { useContext } from "react";
-import { useNavigate } from "react-router";
-import BadgerLoginStatusContext from "../contexts/BadgerLoginStatusContext";
-export default function BadgerLogin() {
-    const usernameRef = useRef();
-    const pinRef = useRef();
-    const [loginStatus, setLoginStatus] = useContext(BadgerLoginStatusContext);
+import { useState } from "react";
+import { Alert, Button, Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useMatchaAuth } from "../context/matchaAuthContext.jsx";
+
+export default function MatchaLogin() {
+    const { login } = useMatchaAuth();
     const navigate = useNavigate();
-    function handleLoginSubmit(e) {
-        e.preventDefault();
-        const username = usernameRef.current.value;
-        const pin = pinRef.current.value;
-        if (!username || !pin) {
-            alert("You must provide both a username and pin!");
-            return;
-        }
-        if (!/^\d{7}$/.test(pin)) {
-            alert("Your pin is not a 7-digit number!");
-            return;
-        }
-        fetch("https://cs571api.cs.wisc.edu/rest/s26/hw6/login", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "X-CS571-ID": CS571.getBadgerId(),
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                pin: pin
-            })
-        }).then(res => {
-            if (res.status === 200) {
-                alert("You have been successfully logged in!");
-                setLoginStatus(username);
-                sessionStorage.setItem("loginStatus", JSON.stringify(username));
-                navigate("/");
-            } else {
-                alert("Incorrect username or pin!");
-            }
-        });
+
+    const [formData, setFormData] = useState({
+        username: "",
+        password: ""
+    });
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setFormData((current) => ({
+            ...current,
+            [name]: value
+        }));
     }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const result = login(formData.username, formData.password);
+
+        if (!result.success) {
+            setErrorMessage(result.message);
+            return;
+        }
+
+        setErrorMessage("");
+        navigate("/");
+    }
+
     return (
-        <>
-            <h1>Login</h1>
-            <Form onSubmit={handleLoginSubmit}>
-                <Form.Group className="mb-3" controlId="usernameInput">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control ref={usernameRef} />
+        <Container className="py-5" style={{ maxWidth: "600px" }}>
+            <h1 className="mb-3">Login</h1>
+            <p className="text-muted">
+                Sign in to create matcha posts and manage your wishlist.
+            </p>
+
+            {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="login-username">Username</Form.Label>
+                    <Form.Control
+                        id="login-username"
+                        name="username"
+                        autoComplete="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="pinInput">
-                    <Form.Label>PIN</Form.Label>
-                    <Form.Control type="password" ref={pinRef} />
-                </Form.Group>
-                <Button type="submit">Login</Button>
+                <Form.Group className="mb-4">
+                    <Form.Label htmlFor="login-password">Password</Form.Label>
+                    <Form.Control
+                        id="login-password"
+                        type="password"
+                        name="password"
+                        autoComplete="current-password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    /> </Form.Group>
+
+                <Button type="submit" variant="success">
+                    Login
+                </Button>
             </Form>
-        </>
+        </Container>
     );
 }

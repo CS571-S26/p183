@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { matchaPosts as initialPosts, starterWishlist } from "../../data/matchaData";
+import { matchaPosts as initialPosts } from "../../data/matchaData.js";
+import { useMatchaAuth } from "./matchaAuthContext.jsx";
 
 const MatchaBookContext = createContext();
 
 export function MatchaBookProvider({ children }) {
+    const { isLoggedIn } = useMatchaAuth();
+
     const [posts, setPosts] = useState(() => {
         const savedPosts = localStorage.getItem("matcha-posts");
         return savedPosts ? JSON.parse(savedPosts) : initialPosts;
@@ -11,7 +14,7 @@ export function MatchaBookProvider({ children }) {
 
     const [wishlist, setWishlist] = useState(() => {
         const savedWishlist = localStorage.getItem("matcha-wishlist");
-        return savedWishlist ? JSON.parse(savedWishlist) : starterWishlist;
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
     });
 
     useEffect(() => {
@@ -22,22 +25,40 @@ export function MatchaBookProvider({ children }) {
         localStorage.setItem("matcha-wishlist", JSON.stringify(wishlist));
     }, [wishlist]);
 
+    function isInWishlist(postId) {
+        if (!isLoggedIn) return false;
+        return wishlist.some(item => String(item.id) === String(postId));
+    }
+
     function addToWishlist(post) {
-        const wishlistItem = {
-            id: post.id,
-            name: post.title,
-            type: post.category
-        };
+        if (!isLoggedIn) return;
 
         setWishlist(current => {
-            const alreadyExists = current.some(item => item.name === wishlistItem.name);
+            const alreadyExists = current.some(item => String(item.id) === String(post.id));
             if (alreadyExists) return current;
-            return [...current, wishlistItem];
+
+            return [...current, post];
         });
     }
 
     function removeFromWishlist(id) {
-        setWishlist(current => current.filter(item => item.id !== id));
+        setWishlist(current => current.filter(item => String(item.id) !== String(id)));
+    }
+
+    function toggleWishlist(post) {
+        if (!isLoggedIn) return null;
+
+        if (isInWishlist(post.id)) {
+            removeFromWishlist(post.id);
+            return false;
+        } else {
+            addToWishlist(post);
+            return true;
+        }
+    }
+    function clearWishlist() {
+        setWishlist([]);
+        localStorage.removeItem("matcha-wishlist");
     }
 
     function addPost(newPost) {
@@ -49,6 +70,10 @@ export function MatchaBookProvider({ children }) {
             ...current
         ]);
     }
+    function deletePost(postId) {
+        setPosts(current => current.filter(post => String(post.id) !== String(postId)));
+        setWishlist(current => current.filter(item => String(item.id) !== String(postId)));
+    }
 
     function getPostById(id) {
         return posts.find(post => String(post.id) === String(id));
@@ -57,11 +82,15 @@ export function MatchaBookProvider({ children }) {
     const value = useMemo(() => ({
         posts,
         wishlist,
+        isInWishlist,
         addToWishlist,
         removeFromWishlist,
+        toggleWishlist,
+        clearWishlist,
         addPost,
+        deletePost,
         getPostById
-    }), [posts, wishlist]);
+    }), [posts, wishlist, isLoggedIn]);
 
     return (
         <MatchaBookContext.Provider value={value}>
